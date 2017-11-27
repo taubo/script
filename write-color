@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# TODO: allow to turn off colors
+
+BWHITE="\033[1;37m"
+WHITE="\033[0;37m"
+BYELLOW="\033[1;33m"
+YELLOW="\033[0;33m"
+BBLUE="\033[1;34m"
+BLUE="\033[0;34m"
+BRED="\033[1;31m"
+RED="\033[0;31m"
+
+# workaround to turn off colors
+NOCOLOR=""
+
+COLOR_OFF="\033[0m"
+
+# LOG_TEXT_COLOR=$BYELLOW
+# LOG_TEXT_COLOR=$BRED
+if [ -z "$LOG_TEXT_COLOR" ]; then
+	# LOG_TEXT_COLOR=$BBLUE
+	LOG_TEXT_COLOR=$NOCOLOR
+fi
+LOG_COLOR_OFF=$COLOR_OFF
+
+write_color() {
+        echo -en $LOG_TEXT_COLOR"$1"$LOG_COLOR_OFF
+}
+
+# TODO: let the user to configure colors
+while getopts "t:T:" i; do
+	case $i in
+		"t")
+			TXT_COLOR=$OPTARG
+			;;
+	esac
+done
+shift "$((OPTIND - 1))"
+
+if [ -n "$TXT_COLOR" ]; then
+	case $TXT_COLOR in
+		"bblue")
+			LOG_TEXT_COLOR=$BBLUE
+		;;
+		"blue")
+			LOG_TEXT_COLOR=$BLUE
+		;;
+		"bred")
+			LOG_TEXT_COLOR=$BRED
+		;;
+		"red")
+			LOG_TEXT_COLOR=$RED
+		;;
+		"byellow")
+			LOG_TEXT_COLOR=$BYELLOW
+		;;
+		"yellow")
+			LOG_TEXT_COLOR=$YELLOW
+		;;
+		"bwhite")
+			LOG_TEXT_COLOR=$BWHITE
+		;;
+		"white")
+			LOG_TEXT_COLOR=$WHITE
+		;;
+	esac
+fi
+
+write_color "$1"
