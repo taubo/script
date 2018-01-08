@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# move this into a config file
+KINDLE_MAIL=mauro.tubiana_45fff7@kindle.com
+
+if [ -n "$1" ]; then
+	ATTACHMENT="$1"
+fi
+
+echo "" | mail -A $ATTACHMENT $KINDLE_MAIL
