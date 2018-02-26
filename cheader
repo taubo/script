@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# create a new *.h file with the standard guard
+# usage:
+# cheader <filename> [destination]
+
+if [ -n "$1" ]; then
+	FILENAME="$1"
+fi
+
+if [ -n "$2" ]; then
+	DEST="$2/"
+fi
+
+FILE_H=$DEST$FILENAME.h
+echo $FILE_H
+
+UPPERCASE_FILENAME=${FILENAME^^}
+GUARD1="#ifndef $UPPERCASE_FILENAME""_H"
+GUARD2="#define $UPPERCASE_FILENAME""_H"
+GUARD3="#endif"
+
+
+echo $GUARD1 >> $FILE_H
+echo $GUARD2 >> $FILE_H
+echo -e "\n" >> $FILE_H
+echo $GUARD3 >> $FILE_H
