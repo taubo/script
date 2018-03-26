@@ -1,0 +1,99 @@
+#!/bin/bash
+
+SUBREDDIT_URL=reddit.com/r
+
+HOTS_SUBREDDIT=heroesofthestorm
+LOL_SUBREDDIT=leagueoflegends
+DIABLO_SUBREDDIT=diablo
+
+# subreddit_arrays["hots"]=$SUBREDDIT_URL/$HOTS_SUBREDDIT
+# subreddit_arrays["lol"]=$SUBREDDIT_URL/$LOL_SUBREDDIT
+# subreddit_arrays["diablo"]=$SUBREDDIT_URL/$DIABLO_SUBREDDIT
+
+BROWSER=links2
+
+browse() {
+	$BROWSER ${1}
+}
+
+CONF_FILE="/home/tubix/wearit-pc-backup/tubix/tubix-script/reddit.conf"
+
+dbg() {
+	echo "$1"
+}
+
+declare -A subreddit_arrays
+
+reddit_conf_edit() {
+	vim ${CONF_FILE}
+}
+
+reddit_conf_save() {
+	echo reddit_conf_save
+	for i in ${!subreddit_arrays[@]}; do
+		echo save
+	done
+}
+
+reddit_conf_read() {
+	while read i; do
+		key=`echo $i | cut -d ":" -f 1`
+		value=`echo $i | cut -d ":" -f 2`
+		subreddit_add "$key" "$value"
+	done < ${CONF_FILE}
+}
+
+reddit_init() {
+	# read_conf <conf_file>
+	reddit_conf_read
+}
+
+subreddit_print() {
+	for i in ${!subreddit_arrays[@]}; do
+		write-color -t bwhite "$i\t"
+		write-color -t bred "=> "
+		write-color "${subreddit_arrays[$i]}\n"
+	done
+}
+
+subreddit_browse() {
+	echo browse
+}
+
+subreddit_list() {
+	subreddit_print
+}
+
+subreddit_add() {
+	key="$1"
+	value="$2"
+	subreddit_arrays[$key]=$value
+}
+
+reddit_init
+
+if [ -n "$1" ]; then
+	CMD="$1"
+fi
+
+case $CMD in
+	"go")
+	 	browse $SUBREDDIT_URL/${subreddit_arrays[${2}]}
+		;;
+	"add")
+		key="$2"
+		value="$3"
+		subreddit_add "$key" "$value"
+		echo "$key:$value" >> $CONF_FILE
+		subreddit_list
+		;;
+	"list")
+		subreddit_list
+		;;
+	"edit")
+		reddit_conf_edit
+		;;
+	*)
+	 	browse $SUBREDDIT_URL/${subreddit_arrays[${1}]}
+		;;
+esac
