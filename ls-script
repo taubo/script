@@ -1,0 +1,5 @@
+#!/bin/bash
+
+script_dir=/home/tubix/devel/script
+
+ls -l --color $script_dir
